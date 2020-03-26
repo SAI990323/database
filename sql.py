@@ -1,27 +1,26 @@
-#!/usr/bin/python
-# -*- coding: UTF-8 -*-
+import pymysql.cursors
 
-import MySQLdb
 
-# 打开数据库连接
-db = MySQLdb.connect("localhost", "testuser", "test123", "TESTDB", charset='utf8' )
+class Mysql:
+    def __init__(self):
+        pymysql.connect()
+        self.connection = pymysql.connect(
+            host='localhost',
+            user='root',
+            passwd='',
+            db = 'dbname',
+            charset='UTF8MB4'
+        )
+        self.cursor = self.connection.cursor()
 
-# 使用cursor()方法获取操作游标 
-cursor = db.cursor()
+    def delete(self, sql):
+        self.cursor.execute(sql)
+        self.connection.commit()
 
-# SQL 插入语句
-sql = "INSERT INTO EMPLOYEE(FIRST_NAME, \
-       LAST_NAME, AGE, SEX, INCOME) \
-       VALUES (%s, %s, %s, %s, %s )" % \
-       ('Mac', 'Mohan', 20, 'M', 2000)
-try:
-   # 执行sql语句
-   cursor.execute(sql)
-   # 提交到数据库执行
-   db.commit()
-except:
-   # 发生错误时回滚
-   db.rollback()
+    def insert(self, sql):
+        self.cursor.execute(sql)
+        self.connection.commit()
 
-# 关闭数据库连接
-db.close()
+    def query(self, sql):
+        self.cursor.execute(sql)
+        self.connection.commit()
