@@ -79,12 +79,13 @@ class INSERT(QWidget):
         text_string = self.text.toPlainText()
         text_string = text_string.strip('\n')
         x = text_string.split(',')
-        sql_string = 'insert into ' + self.cb.currentText() + 'values' + '('
+        sql_string = 'insert into ' + self.cb.currentText() + ' values' + ' ('
         le = len(x)
         sql_string = sql_string + '\'' + x[0] + '\''
         for id in range(1, le):
             sql_string = sql_string + ', \'' + x[id] + '\''
-        sql_string = sql_string + ')'
+        sql_string = sql_string + ');'
+        print(sql_string)
         self.db.insert(sql_string)
 
     def handle_click(self):
@@ -150,20 +151,20 @@ class ASK(QWidget):
         self.cb.addItems(ask)
         self.cb.currentIndexChanged.connect(self.selectchange)
         self.btn.clicked.connect(self.query)
-        layout.addWidget(self.text)
         layout.addWidget(self.btn)
         layout.addWidget(self.cb)
         layout.addWidget(self.label)
+        layout.addWidget(self.text)
         self.setLayout(layout)
 
     def selectchange(self):
         self.label.setText(query_info[self.cb.currentIndex()])
 
     def query(self):
-        if self.cb.currentIndex() < 8 :
+        if self.cb.currentIndex() < 8:
             sql_string = query_sql[self.cb.currentIndex()]
             self.db.query(sql_string)
-        else :
+        else:
             sql_string = self.text.toPlainText()
             self.db.query(sql_string)
 
@@ -176,8 +177,8 @@ class ASK(QWidget):
 
 
 class Example(QWidget):
-    close_signal = pyqtSignal()
 
+    close_signal = pyqtSignal()
     def __init__(self, insert, ask, delete):
         super().__init__()
 
