@@ -11,7 +11,6 @@ class Mysql:
             db = 'dbname',
             charset='UTF8MB4'
         )
-        self.cursor = self.connection.cursor()
         self.load()
 
     def load(self):
@@ -20,31 +19,57 @@ class Mysql:
         self.connection.commit()
 
     def delete(self, sql):
-        self.cursor.execute(sql)
-        self.connection.commit()
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        cursor.close()
 
     def insert(self, sql):
-        self.cursor.execute(sql)
-        self.connection.commit()
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        cursor.close()
 
     def query(self, sql):
-        self.cursor.execute(sql)
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        colname = []
+        colinfo = []
+        for col in cursor.description:
+            colname.append(col[0])
+        for da in data:
+            li = []
+            for i in da:
+                li.append(i)
+            colinfo.append(li)
+        cursor.close()
+        return colname, colinfo
+
+    def commit(self):
         self.connection.commit()
-        data = self.cursor.fetchall()
-        print(data)
+
+    def rollback(self):
+        self.connection.rollback()
 
     def close(self):
         self.connection.close()
 
+    def create_view(self, sql):
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        cursor.close()
+        self.commit()
+
     def executeScriptsFromFile(self,filename):
         fd = open(filename, 'r', encoding='utf-8')
+        cursor = self.connection.cursor()
         sqlfile = fd.read()
         fd.close()
         sqlcommands = sqlfile.split(';')
         for command in sqlcommands:
             try:
-                self.cursor.execute(command)
+                cursor.execute(command)
             except Exception as msg:
                 print(msg)
+        cursor.close()
         print('sql执行完成')
 

@@ -78,7 +78,6 @@ insert into teaches values ('83821', 'CS-319', '2', 'Spring', '2010');
 insert into teaches values ('98345', 'EE-181', '1', 'Spring', '2009');
 insert into student values ('00128', 'Zhang', 'Comp. Sci.', '102');
 insert into student values ('12345', 'Shankar', 'Comp. Sci.', '32');
-
 insert into student values ('19991', 'Brandt', 'History', '80');
 insert into student values ('23121', 'Chavez', 'Finance', '110');
 insert into student values ('44553', 'Peltier', 'Physics', '56');

@@ -10,6 +10,7 @@ drop table course;
 drop table department;
 drop table classroom;
 
+
 create table classroom
 	(building		varchar(15),
 	 room_number		varchar(7),
@@ -17,12 +18,15 @@ create table classroom
 	 primary key (building, room_number)
 	);
 
+create index room_number_index on classroom(room_number);
+
 create table department
 	(dept_name		varchar(20),
 	 building		varchar(15),
 	 budget		        numeric(12,2) check (budget > 0),
 	 primary key (dept_name)
 	);
+create index budget_index on department(budget);
 
 create table course
 	(course_id		varchar(8),
@@ -34,6 +38,8 @@ create table course
 		on delete set null
 	);
 
+create index credits_index on course(credits);
+
 create table instructor
 	(ID			varchar(5),
 	 name			varchar(20) not null,
@@ -43,6 +49,7 @@ create table instructor
 	 foreign key (dept_name) references department(dept_name)
 		on delete set null
 	);
+create index salary_index on instructor(salary);
 
 create table section
 	(course_id		varchar(8),
@@ -83,6 +90,9 @@ create table student
 		on delete set null
 	);
 
+create index name_index on student(name);
+
+
 create table takes
 	(ID			varchar(5),
 	 course_id		varchar(8),
@@ -96,6 +106,7 @@ create table takes
 	 foreign key (ID) references student(ID)
 		on delete cascade
 	);
+
 
 create table advisor
 	(s_ID			varchar(5),
@@ -125,4 +136,9 @@ create table prereq
 		on delete cascade,
 	 foreign key (prereq_id) references course(course_id)
 	);
+
+create trigger grade_calculate
+after insert on takes
+for each row
+update student set tot_cred = tot_cred + (select credits from course where course.course_id = new.course_id) where ID = new.ID;
 
